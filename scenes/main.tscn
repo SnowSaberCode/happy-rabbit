@@ -50,63 +50,49 @@ text = "🐇 快乐兔园 🐇"
 
 [node name="ShopButton" type="Button" parent="TopBar" unique_id=774095797]
 layout_mode = 0
-offset_left = 500.0
+offset_left = 560.0
 offset_top = 10.0
-offset_right = 580.0
+offset_right = 640.0
 offset_bottom = 50.0
 theme = ExtResource("2_theme")
 text = "🏪 商店"
 
-[node name="SaveButton" type="Button" parent="TopBar" unique_id=1563849501]
-layout_mode = 0
-offset_left = 900.0
-offset_top = 10.0
-offset_right = 950.0
-offset_bottom = 50.0
-theme = ExtResource("2_theme")
-text = "💾"
-
-[node name="TaskButton" type="Button" parent="TopBar" unique_id=1122334455]
-layout_mode = 0
-offset_left = 690.0
-offset_top = 10.0
-offset_right = 770.0
-offset_bottom = 50.0
-theme = ExtResource("2_theme")
-text = "🏆 成就"
-
-[node name="GrowthButton" type="Button" parent="TopBar" unique_id=2233445566]
-layout_mode = 0
-offset_left = 780.0
-offset_top = 10.0
-offset_right = 870.0
-offset_bottom = 50.0
-theme = ExtResource("2_theme")
-text = "🌟 成长"
-
 [node name="InventoryButton" type="Button" parent="TopBar" unique_id=123456789]
 layout_mode = 0
-offset_left = 600.0
+offset_left = 660.0
 offset_top = 10.0
-offset_right = 680.0
+offset_right = 740.0
 offset_bottom = 50.0
 theme = ExtResource("2_theme")
 text = "🎒 背包"
 
-[node name="MessageLabel" type="Label" parent="." unique_id=362070856]
-visible = false
-offset_left = 300.0
-offset_top = 70.0
-offset_right = 660.0
-offset_bottom = 100.0
+[node name="GrowthButton" type="Button" parent="TopBar" unique_id=2233445566]
+layout_mode = 0
+offset_left = 760.0
+offset_top = 10.0
+offset_right = 840.0
+offset_bottom = 50.0
 theme = ExtResource("2_theme")
-text = "消息提示"
-horizontal_alignment = 1
-vertical_alignment = 1
+text = "🌟 成长"
 
-[node name="MessageTimer" type="Timer" parent="." unique_id=1912700300]
-wait_time = 2.0
-one_shot = true
+[node name="TaskButton" type="Button" parent="TopBar" unique_id=1122334455]
+visible = false
+layout_mode = 0
+offset_left = 680.0
+offset_top = 10.0
+offset_right = 760.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "🏆 成就"
+
+[node name="SaveButton" type="Button" parent="TopBar" unique_id=1563849501]
+layout_mode = 0
+offset_left = 880.0
+offset_top = 10.0
+offset_right = 950.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "💾 存档"
 
 [node name="FenceArea" type="Node2D" parent="." unique_id=200474296]
 position = Vector2(100, 100)
@@ -188,6 +174,7 @@ offset_left = 680.0
 offset_top = 80.0
 offset_right = 940.0
 offset_bottom = 450.0
+mouse_filter = 2
 theme = ExtResource("2_theme")
 
 [node name="InfoTitle" type="Label" parent="RabbitInfoPanel" unique_id=1188505141]
@@ -490,6 +477,12 @@ text = "🥣 黄金食盆
 快乐+饱食双加成
 800 💰"
 
+[node name="BuyAutoToilet" type="Button" parent="ShopPanel/FurnitureSection/FurnitureRow2" unique_id=200200201]
+custom_minimum_size = Vector2(180, 80)
+text = "🚽 自动马桶
+自动收集便便
+1000 💰"
+
 [node name="RabbitSection" type="VBoxContainer" parent="ShopPanel" unique_id=210210210]
 visible = false
 layout_mode = 0
@@ -641,6 +634,23 @@ text = "没有可用的物资"
 horizontal_alignment = 1
 
 
+[node name="MessageLabel" type="Label" parent="." unique_id=362070856]
+visible = false
+offset_left = 250.0
+offset_top = 280.0
+offset_right = 710.0
+offset_bottom = 320.0
+theme = ExtResource("2_theme")
+text = "消息提示"
+horizontal_alignment = 1
+vertical_alignment = 1
+z_index = 100
+
+[node name="MessageTimer" type="Timer" parent="." unique_id=1912700300]
+wait_time = 2.0
+one_shot = true
+
+
 [connection signal="pressed" from="StoragePanel/CloseButton" to="." method="_on_storage_close_pressed"]
 
 [connection signal="pressed" from="TopBar/ShopButton" to="." method="_on_shop_button_pressed"]
@@ -674,4 +684,5 @@ horizontal_alignment = 1
 [connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow1/BuyWaterFountain" to="." method="_on_buy_water_fountain_pressed"]
 [connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow1/BuyGrassMat" to="." method="_on_buy_grass_mat_pressed"]
 [connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow2/BuyGoldBowl" to="." method="_on_buy_gold_bowl_pressed"]
+[connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow2/BuyAutoToilet" to="." method="_on_buy_auto_toilet_pressed"]
 [connection signal="pressed" from="ShopPanel/RabbitSection/RabbitRow1/BuyExpand" to="." method="_on_expand_fence_pressed"]

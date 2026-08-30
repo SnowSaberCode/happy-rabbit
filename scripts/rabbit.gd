@@ -47,7 +47,7 @@ const FUR_COLORS = COLORS_GRAY + COLORS_WHITE + COLORS_BROWN
 const HUNGER_DECAY: float = 0.3
 const THIRST_DECAY: float = 0.4
 const HAPPINESS_DECAY: float = 0.15
-const FUR_GROWTH: float = 0.2
+const FUR_GROWTH: float = 1.0
 
 # AI状态
 enum AIState {
@@ -88,13 +88,13 @@ var poop_timer: float = 0.0  # 便便生成计时器
 var next_poop_time: float = 0.0  # 下次生成便便的时间
 var my_poop_count: int = 0  # 这只兔子当前存在的便便数量
 const MAX_POOP_PER_RABBIT: int = 3  # 单只兔子最多便便数
-const POOP_MIN_INTERVAL: float = 10.0  # 最短间隔（秒）
-const POOP_MAX_INTERVAL: float = 20.0  # 最长间隔（秒）
+const POOP_MIN_INTERVAL: float = 20.0  # 最短间隔（秒）
+const POOP_MAX_INTERVAL: float = 30.0  # 最长间隔（秒）
 const GOLDEN_POOP_CHANCE: float = 0.005  # 金色便便概率 0.5%
 
 # 信号
 signal attribute_changed()
-signal poop_created(position: Vector2, is_golden: bool)  # 生成便便时发出
+signal poop_created(rabbit, position: Vector2, is_golden: bool)  # 生成便便时发出
 
 func _ready():
 	# 确保兔子可见
@@ -697,7 +697,7 @@ func _create_poop() -> void:
 	my_poop_count += 1
 
 	# 发出信号，由主场景处理显示和交互
-	poop_created.emit(poop_pos, is_golden)
+	poop_created.emit(self, poop_pos, is_golden)
 
 	print("[Poop] ", rabbit_name, " 拉了一坨便便，位置:", poop_pos, " 金色:", is_golden)
 

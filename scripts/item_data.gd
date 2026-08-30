@@ -211,6 +211,17 @@ var all_items: Dictionary = {
 		"big_icon": "🥣",
 		"placeable": true
 	},
+	"auto_toilet": {
+		"id": "auto_toilet",
+		"name": "自动马桶",
+		"type": ItemType.FURNITURE,
+		"price": 1000,
+		"auto_collect_poop": true,
+		"description": "自动收集便便，每30秒自动清理围栏内所有便便并获得金币",
+		"icon": "🚽",
+		"big_icon": "🚽",
+		"placeable": true
+	},
 
 	# ========== 材料 ==========
 	"rabbit_poop": {

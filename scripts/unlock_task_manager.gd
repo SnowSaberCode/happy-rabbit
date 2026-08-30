@@ -35,7 +35,7 @@ const TASK_ORDER = [
 	"unlock_place_house",    # 9. 放置1个设施 → 解锁青草垫
 	"unlock_shave_5",        # 10. 累计剃毛5次 → 解锁胡萝卜蛋糕
 	"unlock_breed_5",        # 11. 同时拥有5只兔子 → 解锁自动喂食器
-	"unlock_coins_5000",     # 12. 累计5000金币 → 解锁黄金食盆
+	"unlock_coins_5000",     # 12. 累计5000金币 → 解锁自动马桶
 ]
 
 # 初始解锁的物品（游戏一开始就可用）
@@ -196,12 +196,12 @@ var task_definitions: Dictionary = {
 	"unlock_coins_5000": {
 		"id": "unlock_coins_5000",
 		"name": "兔园大亨",
-		"description": "累计获得5000金币，你已经是兔园大亨啦！",
+		"description": "累计获得1000金币，你已经是兔园大亨啦！",
 		"category": "coins_earned",
-		"target": 5000,
+		"target": 1000,
 		"reward": {
 			"coins": 1000,
-			"unlock_item": "golden_bowl"
+			"unlock_item": "auto_toilet"
 		},
 		"icon": "👑",
 		"phase": 4

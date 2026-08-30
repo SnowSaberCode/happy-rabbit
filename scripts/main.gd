@@ -22,6 +22,11 @@ extends Node2D
 
 # 动画相关
 var message_tween: Tween
+var current_message_label: Label
+
+# 自动马桶计时器
+var auto_toilet_timer: float = 0.0
+const AUTO_TOILET_INTERVAL: float = 30.0  # 每30秒自动收集一次
 
 # 已拥有的兔子品种
 var owned_breeds: Array = ["lop_gray"]
@@ -118,9 +123,13 @@ var save_panel_visible: bool = false  # 存档面板是否显示
 # 便便系统
 var total_poop_count: int = 0
 const MAX_TOTAL_POOP: int = 15  # 全场最多便便数
+var poop_list: Array = []  # 便便数据列表，每项 {node, world_pos, is_golden}
 
 # 简单的悬停检测（只检测兔子，不检测道具）
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	# 自动马桶：定时收集所有便便
+	_auto_toilet_update(delta)
+
 	# 获取围栏内的鼠标位置
 	var mouse_pos = get_global_mouse_position()
 	var fence_pos = $FenceArea.get_global_position()
@@ -163,17 +172,6 @@ func _input(event: InputEvent) -> void:
 		var mouse_pos = get_global_mouse_position()
 
 		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			# 如果刚刚点击了兔子，跳过取消选中
-			if GameManager.just_clicked_rabbit:
-				GameManager.just_clicked_rabbit = false
-				return
-
-			# 检查是否点击在信息面板上
-			if rabbit_info_panel.visible:
-				var panel_rect = Rect2(rabbit_info_panel.position, rabbit_info_panel.size)
-				if panel_rect.has_point(mouse_pos):
-					return
-
 			# 检查是否点击在商店面板上
 			if shop_panel.visible:
 				var shop_rect = Rect2(shop_panel.position, shop_panel.size)
@@ -207,13 +205,12 @@ func _input(event: InputEvent) -> void:
 				var local_pos = Vector2(mouse_pos.x - 100, mouse_pos.y - 100)
 				var fence = $FenceArea
 
-				# 先检查是否点击到了便便
-				for child in fence.get_children():
-					if child.name.begins_with("Poop_") and child is Label:
-						var poop_rect = Rect2(child.position, child.size)
-						if poop_rect.has_point(local_pos):
-							get_viewport().set_input_as_handled()
-							return
+				# 先检查是否点击到了便便（无需选中兔子，直接收集）
+				for poop_data in poop_list:
+					if local_pos.distance_to(poop_data.world_pos) <= 25.0:
+						_collect_poop(poop_data.node)
+						get_viewport().set_input_as_handled()
+						return
 
 				# 优先检查是否点击了设施物品
 				for i in range(fence.get_child_count()):
@@ -259,7 +256,12 @@ func _input(event: InputEvent) -> void:
 					found_rabbit.select()
 				else:
 					# 点击了围栏空白区域，取消选中
-					GameManager.deselect_rabbit()
+					# 但如果是刚刚点击了兔子（just_clicked_rabbit为true），则跳过这次取消
+					# 防止点击兔子的同时又立即取消选中
+					if GameManager.just_clicked_rabbit:
+						GameManager.just_clicked_rabbit = false
+					else:
+						GameManager.deselect_rabbit()
 
 		elif not event.pressed and event.button_index == MOUSE_BUTTON_LEFT and dragging_item:
 			# 左键释放，结束拖拽并保存位置
@@ -333,6 +335,13 @@ func _check_and_spawn_rabbit():
 				$FenceArea.add_child(rabbit)
 				_setup_rabbit(rabbit)
 				print("初始兔子已生成，名字：", rabbit.rabbit_name, "，颜色：", rabbit.fur_color)
+
+			# 同步兔子数量到任务系统（初始生成或存档恢复后）
+			var final_count = GameManager.get_rabbit_count()
+			TaskManager.total_stats["breed"] = final_count
+			TaskManager.update_task_progress("breed", 0)
+			UnlockTaskManager.update_rabbit_count(final_count)
+			print("[Main] 兔子数量同步到任务系统: ", final_count)
 # 更新金币显示
 func _on_coins_changed(new_amount: int) -> void:
 	coins_label.text = "💰 " + str(new_amount)
@@ -419,8 +428,6 @@ func _on_rabbit_deselected() -> void:
 	tween.tween_property(rabbit_info_panel, "position:x", 960, 0.2)
 	tween.finished.connect(func(): rabbit_info_panel.visible = false)
 
-	# 显示取消选中消息
-	_show_message("已取消选中", "normal")
 
 # 更新兔子信息面板
 func _update_rabbit_info(rabbit: Node2D) -> void:
@@ -1068,35 +1075,52 @@ func _hide_save_panel() -> void:
 
 	print("DEBUG: 存档面板已隐藏")
 
-# 显示消息
+# 显示消息（浮层式，不会被任何面板遮挡）
 func _show_message(message: String, message_type: String = "normal") -> void:
 	print(message)
 
-	# 设置消息样式
-	match message_type:
-		"success":
-			message_label.modulate = Color(0.3, 0.8, 0.3)
-		"warning":
-			message_label.modulate = Color(0.9, 0.7, 0.2)
-		"error":
-			message_label.modulate = Color(0.9, 0.3, 0.3)
-		_:
-			message_label.modulate = Color(1, 1, 1)
-
-	message_label.text = message
-	message_label.visible = true
-
-	# 停止之前的动画
+	# 清除之前的消息，防止重叠
+	if current_message_label and is_instance_valid(current_message_label):
+		current_message_label.queue_free()
+		current_message_label = null
 	if message_tween and message_tween.is_valid():
 		message_tween.kill()
 
-	# 创建淡入动画
-	message_label.modulate.a = 0
+	# 创建消息浮层（每次新建，确保在最上层）
+	var label = Label.new()
+	label.text = message
+	label.add_theme_font_size_override("font_size", 16)
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.size = Vector2(420, 30)
+	label.position = Vector2(270, 58)
+	label.z_index = 200
+
+	# 设置文字颜色
+	match message_type:
+		"success":
+			label.modulate = Color(0.4, 1, 0.4)
+		"warning":
+			label.modulate = Color(1, 0.85, 0.3)
+		"error":
+			label.modulate = Color(1, 0.4, 0.4)
+		_:
+			label.modulate = Color(1, 1, 1)
+
+	add_child(label)
+	current_message_label = label
+
+	# 淡入 + 淡出动画
+	label.modulate.a = 0
 	message_tween = create_tween()
-	message_tween.tween_property(message_label, "modulate:a", 1, 0.2)
-	message_tween.tween_interval(1.5)
-	message_tween.tween_property(message_label, "modulate:a", 0, 0.3)
-	message_tween.finished.connect(func(): message_label.visible = false)
+	message_tween.tween_property(label, "modulate:a", 1, 0.2)
+	message_tween.tween_interval(1.8)
+	message_tween.tween_property(label, "modulate:a", 0, 0.3)
+	message_tween.finished.connect(func ():
+		if label and is_instance_valid(label):
+			label.queue_free()
+		current_message_label = null
+	)
 
 # 显示爱心效果（在兔子位置）
 func _spawn_heart_effect(rabbit: Node2D) -> void:
@@ -1151,7 +1175,7 @@ func _buy_rabbit(breed_id: String, breed_name: String, cost: int) -> void:
 	print("尝试购买兔子:", breed_name, ", 金币:", GameManager.coins, ", 上限:", GameManager.max_rabbits)
 
 	if GameManager.coins < cost:
-		_show_message("金币不足！需要 " + str(cost) + " 金币", "warning")
+		_show_message("金币不足！需要 %d 金币（当前 %d）" % [cost, GameManager.coins], "warning")
 		return
 
 	if breed_id not in owned_breeds:
@@ -1166,7 +1190,7 @@ func _buy_rabbit(breed_id: String, breed_name: String, cost: int) -> void:
 	print("当前兔子数量:", rabbit_count, ", 上限:", GameManager.max_rabbits)
 
 	if rabbit_count >= GameManager.max_rabbits:
-		_show_message("围栏已满！请先扩建围栏", "warning")
+		_show_message("围栏已满（%d/%d）！去商店「兔子」页扩建围栏吧" % [rabbit_count, GameManager.max_rabbits], "warning")
 		return
 
 	if GameManager.spend_coins(cost):
@@ -1216,7 +1240,7 @@ func _on_expand_fence_pressed() -> void:
 	AudioManager.play_click()
 	var cost = 1000
 	if GameManager.coins < cost:
-		_show_message("金币不足！需要 " + str(cost) + " 金币", "warning")
+		_show_message("金币不足！需要 %d 金币（当前 %d）" % [cost, GameManager.coins], "warning")
 		return
 
 	if GameManager.spend_coins(cost):
@@ -1282,6 +1306,7 @@ func _refresh_shop_lock_status() -> void:
 	_set_item_lock_status("BuyWaterFountain", "water_fountain", "自动饮水器", 400)
 	_set_item_lock_status("BuyGrassMat", "grass_mat", "青草垫", 150)
 	_set_item_lock_status("BuyGoldBowl", "golden_bowl", "黄金食盆", 800)
+	_set_item_lock_status("BuyAutoToilet", "auto_toilet", "自动马桶", 1000)
 
 # 物品解锁时刷新商店
 func _on_item_unlocked(item_id: String) -> void:
@@ -1327,7 +1352,7 @@ func _purchase_item(item_id: String, item_name: String, cost: int) -> void:
 		return
 
 	if GameManager.coins < cost:
-		_show_message("金币不足！需要 " + str(cost) + " 金币", "warning")
+		_show_message("金币不足！需要 %d 金币（当前 %d）" % [cost, GameManager.coins], "warning")
 		return
 
 	if GameManager.spend_coins(cost):
@@ -1377,6 +1402,9 @@ func _on_buy_grass_mat_pressed() -> void:
 func _on_buy_gold_bowl_pressed() -> void:
 	_purchase_furniture("golden_bowl", "黄金食盆", 800, "快乐+饱食双加成")
 
+func _on_buy_auto_toilet_pressed() -> void:
+	_purchase_furniture("auto_toilet", "自动马桶", 1000, "自动收集便便")
+
 func _purchase_furniture(item_id: String, name: String, cost: int, effect_desc: String) -> void:
 	print("[Main] 点击购买设施: ", item_id, " (", name, ")")
 	AudioManager.play_click()
@@ -1386,6 +1414,14 @@ func _purchase_furniture(item_id: String, name: String, cost: int, effect_desc: 
 		print("[Main] ❌ 设施未解锁: ", item_id)
 		_show_message("🔒 " + name + " 尚未解锁！完成成长任务解锁吧 🌟", "warning")
 		return
+
+	# 检查是否为唯一设施（只能买一个）
+	var unique_items = ["auto_feeder", "water_fountain", "auto_toilet"]
+	if item_id in unique_items:
+		for placed in InventoryManager.placed_items:
+			if placed.id == item_id:
+				_show_message(name + " 已经放置过了，只能拥有一个！", "warning")
+				return
 
 	if InventoryManager.purchase_item(item_id):
 		AudioManager.play_buy()
@@ -1985,7 +2021,7 @@ func _setup_rabbit(rabbit: Node) -> void:
 		rabbit.poop_created.connect(_on_rabbit_poop_created)
 
 # 兔子拉便便时调用
-func _on_rabbit_poop_created(pos: Vector2, is_golden: bool) -> void:
+func _on_rabbit_poop_created(rabbit, pos: Vector2, is_golden: bool) -> void:
 	# 全场上限检查
 	if total_poop_count >= MAX_TOTAL_POOP:
 		return
@@ -1997,8 +2033,9 @@ func _on_rabbit_poop_created(pos: Vector2, is_golden: bool) -> void:
 	poop_label.add_theme_font_size_override("font_size", 24)
 	poop_label.custom_minimum_size = Vector2(30, 30)
 	poop_label.position = pos - Vector2(15, 15)
-	poop_label.mouse_filter = Control.MOUSE_FILTER_STOP
+	poop_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	poop_label.set_meta("is_golden", is_golden)
+	poop_label.set_meta("world_pos", pos)  # 便便中心在围栏内的坐标
 
 	# 金色便便发光效果
 	if is_golden:
@@ -2009,14 +2046,18 @@ func _on_rabbit_poop_created(pos: Vector2, is_golden: bool) -> void:
 		tween.tween_property(poop_label, "modulate", Color(1, 0.9, 0.2, 1), 0.5)
 		tween.tween_property(poop_label, "modulate", Color(1, 1, 0.5, 1), 0.5)
 
-	# 点击收集
-	poop_label.gui_input.connect(func(event):
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			_collect_poop(poop_label)
-	)
+	# 注意：点击收集统一由 _on_fence_area_input 处理
+	# 便便节点设置为 MOUSE_FILTER_IGNORE，确保事件穿透到 FenceArea
 
 	$FenceArea.add_child(poop_label)
 	total_poop_count += 1
+	# 加入便便列表（用于点击检测，不依赖节点坐标）
+	poop_list.append({
+		"node": poop_label,
+		"world_pos": pos,
+		"is_golden": is_golden,
+		"rabbit": rabbit
+	})
 
 # 收集便便
 func _collect_poop(poop_node: Label) -> void:
@@ -2040,6 +2081,16 @@ func _collect_poop(poop_node: Label) -> void:
 	# 减少计数
 	total_poop_count = max(0, total_poop_count - 1)
 
+	# 从便便列表中移除，并通知对应的兔子继续拉便便
+	for i in range(poop_list.size()):
+		if i < poop_list.size() and poop_list[i].node == poop_node:
+			var poop_rabbit = poop_list[i].rabbit
+			poop_list.remove_at(i)
+			# 通知兔子，减少它的便便计数，让它可以继续拉
+			if poop_rabbit and is_instance_valid(poop_rabbit):
+				poop_rabbit.on_poop_collected()
+			break
+
 	# 通知兔子（让它可以继续拉）
 	# 这里简单处理：找到最近的兔子并通知
 	# （因为便便不记录是哪只兔子的，用全局计数控制就行）
@@ -2061,3 +2112,78 @@ func _collect_poop(poop_node: Label) -> void:
 		AudioManager.play_click()
 
 	print("[Poop] 收集便便，金色:", is_golden, "，金币+", price)
+
+# 检查是否有自动马桶设施
+func _has_auto_toilet() -> bool:
+	for placed in InventoryManager.placed_items:
+		if placed.id == "auto_toilet":
+			return true
+	return false
+
+# 自动马桶更新（每帧调用）
+func _auto_toilet_update(delta: float) -> void:
+	if not _has_auto_toilet():
+		auto_toilet_timer = 0.0
+		return
+
+	auto_toilet_timer += delta
+	if auto_toilet_timer >= AUTO_TOILET_INTERVAL:
+		auto_toilet_timer = 0.0
+		_auto_collect_all_poop()
+
+# 自动收集所有便便
+func _auto_collect_all_poop() -> void:
+	if poop_list.is_empty():
+		return
+
+	var total_coins = 0
+	var golden_count = 0
+	var normal_count = 0
+
+	# 倒序遍历，边收集边移除
+	for i in range(poop_list.size() - 1, -1, -1):
+		var poop_data = poop_list[i]
+		var poop_node = poop_data.node
+		if not is_instance_valid(poop_node):
+			poop_list.remove_at(i)
+			continue
+
+		var is_golden = poop_data.is_golden
+		var item_id = "golden_poop" if is_golden else "rabbit_poop"
+		var item_info = ItemData.get_item(item_id)
+		var price = item_info.get("price", 2)
+
+		# 放入背包
+		InventoryManager.add_item(item_id, 1)
+		total_coins += price
+
+		# 通知兔子减少便便计数
+		var poop_rabbit = poop_data.rabbit
+		if poop_rabbit and is_instance_valid(poop_rabbit):
+			poop_rabbit.on_poop_collected()
+
+		# 收集动画
+		var tween = create_tween()
+		tween.tween_property(poop_node, "position:y", poop_node.position.y - 30, 0.4)
+		tween.tween_property(poop_node, "modulate:a", 0, 0.3)
+		tween.finished.connect(func ():
+			if is_instance_valid(poop_node):
+				poop_node.queue_free()
+		)
+
+		if is_golden:
+			golden_count += 1
+		else:
+			normal_count += 1
+
+		poop_list.remove_at(i)
+
+	# 给金币
+	if total_coins > 0:
+		GameManager.add_coins(total_coins)
+		# 通知任务系统
+		UnlockTaskManager.update_progress("clean_poop", normal_count + golden_count)
+		total_poop_count = max(0, total_poop_count - normal_count - golden_count)
+		AudioManager.play_coin()
+
+		print("[AutoToilet] 🚽 自动收集便便: 普通", normal_count, " 金色", golden_count, " 金币+", total_coins)
