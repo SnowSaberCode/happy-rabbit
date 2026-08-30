@@ -1,0 +1,61 @@
+[gd_scene load_steps=2 format=3 uid="uid://task_item_123"]
+
+[ext_resource type="Script" path="res://scripts/task_item.gd" id="1_script"]
+
+[node name="TaskItem" type="PanelContainer"]
+custom_minimum_size = Vector2(500, 100)
+script = ExtResource("1_script")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+
+[node name="HeaderHBox" type="HBoxContainer" parent="VBox"]
+
+[node name="IconLabel" type="Label" parent="VBox/HeaderHBox"]
+text = "🥕"
+custom_minimum_size = Vector2(30, 0)
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NameLabel" type="Label" parent="VBox/HeaderHBox"]
+text = "任务名称"
+horizontal_alignment = 1
+vertical_alignment = 1
+size_flags_horizontal = 3
+
+[node name="StatusLabel" type="Label" parent="VBox/HeaderHBox"]
+text = "进行中"
+custom_minimum_size = Vector2(80, 0)
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="DescLabel" type="Label" parent="VBox"]
+text = "任务描述"
+size_flags_vertical = 3
+
+[node name="ProgressBar" type="ProgressBar" parent="VBox"]
+custom_minimum_size = Vector2(0, 20)
+value = 50
+
+[node name="FooterHBox" type="HBoxContainer" parent="VBox"]
+
+[node name="ProgressLabel" type="Label" parent="VBox/FooterHBox"]
+text = "3/5"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="RewardLabel" type="Label" parent="VBox/FooterHBox"]
+text = "💰 50金币"
+size_flags_horizontal = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ClaimButton" type="Button" parent="VBox/FooterHBox"]
+text = "领取奖励"
+disabled = true

@@ -1,0 +1,129 @@
+[gd_scene format=3 uid="uid://btjnv2lbfp7pc"]
+
+[ext_resource type="Script" uid="uid://dc5pgfyhb1663" path="res://scripts/rabbit.gd" id="1_rabbit"]
+
+[sub_resource type="RectangleShape2D" id="CollisionShape"]
+size = Vector2(50, 50)
+
+[node name="Rabbit" type="CharacterBody2D" unique_id=122452667]
+visible = false
+z_index = 10
+position = Vector2(380, 200)
+collision_mask = 0
+script = ExtResource("1_rabbit")
+
+[node name="Body" type="ColorRect" parent="." unique_id=617695345]
+offset_left = -18.0
+offset_top = -5.0
+offset_right = 18.0
+offset_bottom = 20.0
+color = Color(0.82, 0.75, 0.65, 1)
+
+[node name="Head" type="ColorRect" parent="." unique_id=667796609]
+offset_left = -22.0
+offset_top = -25.0
+offset_right = 22.0
+offset_bottom = 3.0
+color = Color(0.85, 0.78, 0.68, 1)
+
+[node name="EarLeft" type="ColorRect" parent="." unique_id=2043266510]
+offset_left = -30.0
+offset_top = -15.0
+offset_right = -16.0
+offset_bottom = 12.0
+rotation = 0.4
+color = Color(0.8, 0.72, 0.62, 1)
+
+[node name="EarLeftInner" type="ColorRect" parent="." unique_id=72661091]
+offset_left = -27.0
+offset_top = -12.0
+offset_right = -19.0
+offset_bottom = 9.0
+rotation = 0.4
+color = Color(0.95, 0.75, 0.8, 1)
+
+[node name="EarRight" type="ColorRect" parent="." unique_id=1260521894]
+offset_left = 16.0
+offset_top = -15.0
+offset_right = 30.0
+offset_bottom = 12.0
+rotation = -0.4
+color = Color(0.8, 0.72, 0.62, 1)
+
+[node name="EarRightInner" type="ColorRect" parent="." unique_id=1567614903]
+offset_left = 19.0
+offset_top = -12.0
+offset_right = 27.0
+offset_bottom = 9.0
+rotation = -0.4
+color = Color(0.95, 0.75, 0.8, 1)
+
+[node name="EyeLeft" type="ColorRect" parent="." unique_id=348188086]
+offset_left = -14.0
+offset_top = -18.0
+offset_right = -7.0
+offset_bottom = -11.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="EyeLeftShine" type="ColorRect" parent="." unique_id=1615958573]
+offset_left = -12.0
+offset_top = -17.0
+offset_right = -10.0
+offset_bottom = -15.0
+
+[node name="EyeRight" type="ColorRect" parent="." unique_id=891638697]
+offset_left = 7.0
+offset_top = -18.0
+offset_right = 14.0
+offset_bottom = -11.0
+color = Color(0.15, 0.15, 0.15, 1)
+
+[node name="EyeRightShine" type="ColorRect" parent="." unique_id=657755364]
+offset_left = 9.0
+offset_top = -17.0
+offset_right = 11.0
+offset_bottom = -15.0
+
+[node name="CheekLeft" type="ColorRect" parent="." unique_id=468664568]
+offset_left = -18.0
+offset_top = -8.0
+offset_right = -12.0
+offset_bottom = -2.0
+color = Color(1, 0.65, 0.72, 0.5)
+
+[node name="CheekRight" type="ColorRect" parent="." unique_id=1871854246]
+offset_left = 12.0
+offset_top = -8.0
+offset_right = 18.0
+offset_bottom = -2.0
+color = Color(1, 0.65, 0.72, 0.5)
+
+[node name="Nose" type="ColorRect" parent="." unique_id=160630178]
+offset_left = -3.0
+offset_top = -6.0
+offset_right = 3.0
+color = Color(1, 0.55, 0.65, 1)
+
+[node name="Tail" type="ColorRect" parent="." unique_id=1302419432]
+offset_left = 16.0
+offset_top = 10.0
+offset_right = 24.0
+offset_bottom = 18.0
+color = Color(0.9, 0.85, 0.78, 1)
+
+[node name="FootLeft" type="ColorRect" parent="." unique_id=1984765306]
+offset_left = -15.0
+offset_top = 18.0
+offset_right = -5.0
+offset_bottom = 23.0
+color = Color(0.75, 0.68, 0.58, 1)
+
+[node name="FootRight" type="ColorRect" parent="." unique_id=756091417]
+offset_left = 5.0
+offset_top = 18.0
+offset_right = 15.0
+offset_bottom = 23.0
+color = Color(0.75, 0.68, 0.58, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1787920232]
+shape = SubResource("CollisionShape")

@@ -1,0 +1,677 @@
+[gd_scene format=3 uid="uid://b6di04hcjd4vj"]
+
+[ext_resource type="Script" uid="uid://d4fv7f2vbsmuy" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Theme" uid="uid://c764d4c4r8jk8" path="res://assets/ui/theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" uid="uid://task_panel_456" path="res://scenes/task_panel.tscn" id="3_task_panel"]
+[ext_resource type="PackedScene" uid="uid://unlock_task_panel" path="res://scenes/unlock_task_panel.tscn" id="4_unlock_task_panel"]
+
+[node name="Main" type="Node2D" unique_id=1558513558]
+script = ExtResource("1_main")
+
+[node name="Background" type="ColorRect" parent="." unique_id=580202739]
+offset_right = 960.0
+offset_bottom = 640.0
+color = Color(0.53, 0.75, 0.44, 1)
+
+[node name="TopBar" type="ColorRect" parent="." unique_id=1363167317]
+offset_right = 960.0
+offset_bottom = 60.0
+color = Color(0.63, 0.5, 0.38, 1)
+
+[node name="CoinsLabel" type="Label" parent="TopBar" unique_id=1486463875]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = 200.0
+offset_bottom = 45.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"HeaderLabel"
+text = "💰 500"
+
+[node name="RabbitCountLabel" type="Label" parent="TopBar" unique_id=1486463876]
+layout_mode = 0
+offset_left = 210.0
+offset_top = 15.0
+offset_right = 400.0
+offset_bottom = 45.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"HeaderLabel"
+text = "🐇 0/3"
+
+[node name="TitleLabel" type="Label" parent="TopBar" unique_id=494966926]
+layout_mode = 0
+offset_left = 380.0
+offset_top = 10.0
+offset_right = 580.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"TitleLabel"
+text = "🐇 快乐兔园 🐇"
+
+[node name="ShopButton" type="Button" parent="TopBar" unique_id=774095797]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 10.0
+offset_right = 580.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "🏪 商店"
+
+[node name="SaveButton" type="Button" parent="TopBar" unique_id=1563849501]
+layout_mode = 0
+offset_left = 900.0
+offset_top = 10.0
+offset_right = 950.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "💾"
+
+[node name="TaskButton" type="Button" parent="TopBar" unique_id=1122334455]
+layout_mode = 0
+offset_left = 690.0
+offset_top = 10.0
+offset_right = 770.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "🏆 成就"
+
+[node name="GrowthButton" type="Button" parent="TopBar" unique_id=2233445566]
+layout_mode = 0
+offset_left = 780.0
+offset_top = 10.0
+offset_right = 870.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "🌟 成长"
+
+[node name="InventoryButton" type="Button" parent="TopBar" unique_id=123456789]
+layout_mode = 0
+offset_left = 600.0
+offset_top = 10.0
+offset_right = 680.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+text = "🎒 背包"
+
+[node name="MessageLabel" type="Label" parent="." unique_id=362070856]
+visible = false
+offset_left = 300.0
+offset_top = 70.0
+offset_right = 660.0
+offset_bottom = 100.0
+theme = ExtResource("2_theme")
+text = "消息提示"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MessageTimer" type="Timer" parent="." unique_id=1912700300]
+wait_time = 2.0
+one_shot = true
+
+[node name="FenceArea" type="Node2D" parent="." unique_id=200474296]
+position = Vector2(100, 100)
+
+[node name="FenceBackground" type="ColorRect" parent="FenceArea" unique_id=142397962]
+offset_right = 760.0
+offset_bottom = 400.0
+color = Color(0.48, 0.7, 0.38, 1)
+
+[node name="FenceBorder" type="ColorRect" parent="FenceArea" unique_id=1838806412]
+offset_left = -5.0
+offset_top = -5.0
+offset_right = 765.0
+color = Color(0.63, 0.5, 0.38, 1)
+
+[node name="FenceBorder2" type="ColorRect" parent="FenceArea" unique_id=835176581]
+offset_left = -5.0
+offset_top = 400.0
+offset_right = 765.0
+offset_bottom = 405.0
+color = Color(0.63, 0.5, 0.38, 1)
+
+[node name="FenceBorder3" type="ColorRect" parent="FenceArea" unique_id=296387222]
+offset_left = -5.0
+offset_bottom = 405.0
+color = Color(0.63, 0.5, 0.38, 1)
+
+[node name="FenceBorder4" type="ColorRect" parent="FenceArea" unique_id=1799656693]
+offset_left = 760.0
+offset_right = 765.0
+offset_bottom = 405.0
+color = Color(0.63, 0.5, 0.38, 1)
+
+[node name="BottomBar" type="ColorRect" parent="." unique_id=1917076907]
+offset_top = 540.0
+offset_right = 960.0
+offset_bottom = 640.0
+color = Color(0.63, 0.5, 0.38, 1)
+
+[node name="FeedButton" type="Button" parent="BottomBar" unique_id=570627764]
+layout_mode = 0
+offset_left = 100.0
+offset_top = 15.0
+offset_right = 230.0
+offset_bottom = 75.0
+theme = ExtResource("2_theme")
+text = "🥕 使用胡萝卜"
+
+[node name="DrinkButton" type="Button" parent="BottomBar" unique_id=1373870167]
+layout_mode = 0
+offset_left = 250.0
+offset_top = 15.0
+offset_right = 380.0
+offset_bottom = 75.0
+theme = ExtResource("2_theme")
+text = "💧 使用清水"
+
+[node name="PetButton" type="Button" parent="BottomBar" unique_id=2088330213]
+layout_mode = 0
+offset_left = 400.0
+offset_top = 15.0
+offset_right = 530.0
+offset_bottom = 75.0
+theme = ExtResource("2_theme")
+text = "🤚 抚摸"
+
+[node name="ShaveButton" type="Button" parent="BottomBar" unique_id=429693911]
+layout_mode = 0
+offset_left = 550.0
+offset_top = 15.0
+offset_right = 680.0
+offset_bottom = 75.0
+theme = ExtResource("2_theme")
+text = "✂️ 剃毛"
+
+[node name="RabbitInfoPanel" type="Panel" parent="." unique_id=821794986]
+visible = false
+offset_left = 680.0
+offset_top = 80.0
+offset_right = 940.0
+offset_bottom = 450.0
+theme = ExtResource("2_theme")
+
+[node name="InfoTitle" type="Label" parent="RabbitInfoPanel" unique_id=1188505141]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 15.0
+offset_right = 240.0
+offset_bottom = 40.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"HeaderLabel"
+text = "🐰 兔子信息"
+
+[node name="BreedLabel" type="Label" parent="RabbitInfoPanel" unique_id=1573002165]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 50.0
+offset_right = 240.0
+offset_bottom = 75.0
+theme = ExtResource("2_theme")
+text = "品种：灰色垂耳兔"
+
+[node name="HungerBar" type="ProgressBar" parent="RabbitInfoPanel" unique_id=250260784]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 90.0
+offset_right = 240.0
+offset_bottom = 115.0
+theme = ExtResource("2_theme")
+value = 100.0
+
+[node name="HungerLabel" type="Label" parent="RabbitInfoPanel" unique_id=796880390]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 115.0
+offset_right = 120.0
+offset_bottom = 135.0
+theme = ExtResource("2_theme")
+text = "🍖 饱食度"
+
+[node name="ThirstBar" type="ProgressBar" parent="RabbitInfoPanel" unique_id=346238952]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 145.0
+offset_right = 240.0
+offset_bottom = 170.0
+theme = ExtResource("2_theme")
+value = 100.0
+
+[node name="ThirstLabel" type="Label" parent="RabbitInfoPanel" unique_id=938315249]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 170.0
+offset_right = 120.0
+offset_bottom = 190.0
+theme = ExtResource("2_theme")
+text = "💧 口渴度"
+
+[node name="HappinessBar" type="ProgressBar" parent="RabbitInfoPanel" unique_id=97966875]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 200.0
+offset_right = 240.0
+offset_bottom = 225.0
+theme = ExtResource("2_theme")
+value = 80.0
+
+[node name="HappinessLabel" type="Label" parent="RabbitInfoPanel" unique_id=998671784]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 225.0
+offset_right = 120.0
+offset_bottom = 245.0
+theme = ExtResource("2_theme")
+text = "😊 快乐值"
+
+[node name="HealthBar" type="ProgressBar" parent="RabbitInfoPanel" unique_id=888888888]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 255.0
+offset_right = 240.0
+offset_bottom = 280.0
+theme = ExtResource("2_theme")
+value = 100.0
+
+[node name="HealthLabel" type="Label" parent="RabbitInfoPanel" unique_id=999999999]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 280.0
+offset_right = 240.0
+offset_bottom = 300.0
+theme = ExtResource("2_theme")
+text = "❤️ 健康值"
+
+[node name="FurBar" type="ProgressBar" parent="RabbitInfoPanel" unique_id=1747996868]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 310.0
+offset_right = 240.0
+offset_bottom = 335.0
+theme = ExtResource("2_theme")
+value = 20.0
+
+[node name="FurLabel" type="Label" parent="RabbitInfoPanel" unique_id=1289166048]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 335.0
+offset_right = 240.0
+offset_bottom = 355.0
+theme = ExtResource("2_theme")
+text = "✂️ 毛长度 (80可剃毛)"
+
+[node name="ShopPanel" type="Panel" parent="." unique_id=976881060]
+visible = false
+offset_left = 50.0
+offset_top = 30.0
+offset_right = 910.0
+offset_bottom = 570.0
+theme = ExtResource("2_theme")
+
+[node name="ShopTitle" type="Label" parent="ShopPanel" unique_id=732537513]
+layout_mode = 0
+offset_left = 350.0
+offset_top = 15.0
+offset_right = 510.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"HeaderLabel"
+text = "🏪 兔子商店"
+
+[node name="ShopCoinsLabel" type="Label" parent="ShopPanel" unique_id=112233445]
+layout_mode = 0
+offset_left = 650.0
+offset_top = 20.0
+offset_right = 830.0
+offset_bottom = 45.0
+theme = ExtResource("2_theme")
+text = "当前金币: 1000 💰"
+
+[node name="CloseButton" type="Button" parent="ShopPanel" unique_id=906106657]
+layout_mode = 0
+offset_left = 810.0
+offset_top = 10.0
+offset_right = 850.0
+offset_bottom = 45.0
+theme = ExtResource("2_theme")
+text = "✕"
+
+[node name="TabBar" type="HBoxContainer" parent="ShopPanel" unique_id=111222333]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 60.0
+offset_right = 830.0
+offset_bottom = 95.0
+
+[node name="TabFood" type="Button" parent="ShopPanel/TabBar" unique_id=222333444]
+text = "🥕 食物"
+
+[node name="TabToy" type="Button" parent="ShopPanel/TabBar" unique_id=333444555]
+text = "⚽ 玩具"
+
+[node name="TabMedicine" type="Button" parent="ShopPanel/TabBar" unique_id=444555666]
+text = "💊 药品"
+
+[node name="TabFurniture" type="Button" parent="ShopPanel/TabBar" unique_id=555666777]
+text = "🏠 设施"
+
+[node name="TabRabbit" type="Button" parent="ShopPanel/TabBar" unique_id=666777888]
+text = "🐇 兔子"
+
+[node name="FoodSection" type="VBoxContainer" parent="ShopPanel" unique_id=777888999]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 100.0
+offset_right = 830.0
+offset_bottom = 530.0
+
+[node name="FoodRow1" type="HBoxContainer" parent="ShopPanel/FoodSection" unique_id=888999000]
+
+[node name="BuyCarrot" type="Button" parent="ShopPanel/FoodSection/FoodRow1" unique_id=174747954]
+custom_minimum_size = Vector2(180, 80)
+text = "🥕 高级胡萝卜
+恢复70饱食度
+30 💰"
+
+[node name="BuyVegetable" type="Button" parent="ShopPanel/FoodSection/FoodRow1" unique_id=1112125456]
+custom_minimum_size = Vector2(180, 80)
+text = "🥬 新鲜蔬菜
+恢复50饱食度
+15 💰"
+
+[node name="BuyApple" type="Button" parent="ShopPanel/FoodSection/FoodRow1" unique_id=933507896]
+custom_minimum_size = Vector2(180, 80)
+text = "🍎 苹果片
+加速毛生长
+25 💰"
+
+[node name="BuyRabbitFood" type="Button" parent="ShopPanel/FoodSection/FoodRow1" unique_id=121314151]
+custom_minimum_size = Vector2(180, 80)
+text = "🌾 高级兔粮
+全恢复
+50 💰"
+
+[node name="FoodRow2" type="HBoxContainer" parent="ShopPanel/FoodSection" unique_id=999000111]
+
+[node name="BuyWater" type="Button" parent="ShopPanel/FoodSection/FoodRow2" unique_id=111111111]
+custom_minimum_size = Vector2(180, 80)
+text = "💧 清水
+恢复60口渴度
+10 💰"
+
+[node name="BuyCake" type="Button" parent="ShopPanel/FoodSection/FoodRow2" unique_id=101010101]
+custom_minimum_size = Vector2(180, 80)
+text = "🎂 胡萝卜蛋糕
+豪华全属性提升
+100 💰"
+
+[node name="ToySection" type="VBoxContainer" parent="ShopPanel" unique_id=202020202]
+visible = false
+layout_mode = 0
+offset_left = 30.0
+offset_top = 100.0
+offset_right = 830.0
+offset_bottom = 530.0
+
+[node name="ToyRow1" type="HBoxContainer" parent="ShopPanel/ToySection" unique_id=303030303]
+
+[node name="BuyGrassCarrot" type="Button" parent="ShopPanel/ToySection/ToyRow1" unique_id=717171717]
+custom_minimum_size = Vector2(180, 80)
+text = "🥕 草萝卜
++30快乐
+25 💰"
+
+[node name="MedicineSection" type="VBoxContainer" parent="ShopPanel" unique_id=808080808]
+visible = false
+layout_mode = 0
+offset_left = 30.0
+offset_top = 100.0
+offset_right = 830.0
+offset_bottom = 530.0
+
+[node name="MedicineRow1" type="HBoxContainer" parent="ShopPanel/MedicineSection" unique_id=909090909]
+
+[node name="BuyVitamin" type="Button" parent="ShopPanel/MedicineSection/MedicineRow1" unique_id=100100100]
+custom_minimum_size = Vector2(180, 80)
+text = "💊 维生素片
++30健康
+80 💰"
+
+[node name="BuyHerb" type="Button" parent="ShopPanel/MedicineSection/MedicineRow1" unique_id=110110110]
+custom_minimum_size = Vector2(180, 80)
+text = "🌿 草药膏
++60健康
+150 💰"
+
+[node name="BuyMagicWater" type="Button" parent="ShopPanel/MedicineSection/MedicineRow1" unique_id=120120120]
+custom_minimum_size = Vector2(180, 80)
+text = "✨ 神奇泉水
+全属性大提升
+300 💰"
+
+[node name="FurnitureSection" type="VBoxContainer" parent="ShopPanel" unique_id=130130130]
+visible = false
+layout_mode = 0
+offset_left = 30.0
+offset_top = 100.0
+offset_right = 830.0
+offset_bottom = 530.0
+
+[node name="FurnitureRow1" type="HBoxContainer" parent="ShopPanel/FurnitureSection" unique_id=140140140]
+
+[node name="BuyHouse" type="Button" parent="ShopPanel/FurnitureSection/FurnitureRow1" unique_id=150150150]
+custom_minimum_size = Vector2(180, 80)
+text = "🏠 小木屋
+持续增加快乐
+200 💰"
+
+[node name="BuyAutoFeeder" type="Button" parent="ShopPanel/FurnitureSection/FurnitureRow1" unique_id=160160160]
+custom_minimum_size = Vector2(180, 80)
+text = "🍽️ 自动喂食器
+自动恢复饱食
+500 💰"
+
+[node name="BuyWaterFountain" type="Button" parent="ShopPanel/FurnitureSection/FurnitureRow1" unique_id=170170170]
+custom_minimum_size = Vector2(180, 80)
+text = "🥤 自动饮水器
+自动恢复口渴
+400 💰"
+
+[node name="BuyGrassMat" type="Button" parent="ShopPanel/FurnitureSection/FurnitureRow1" unique_id=180180180]
+custom_minimum_size = Vector2(180, 80)
+text = "🟩 青草垫
+加速毛生长
+150 💰"
+
+[node name="FurnitureRow2" type="HBoxContainer" parent="ShopPanel/FurnitureSection" unique_id=190190190]
+
+[node name="BuyGoldBowl" type="Button" parent="ShopPanel/FurnitureSection/FurnitureRow2" unique_id=200200200]
+custom_minimum_size = Vector2(180, 80)
+text = "🥣 黄金食盆
+快乐+饱食双加成
+800 💰"
+
+[node name="RabbitSection" type="VBoxContainer" parent="ShopPanel" unique_id=210210210]
+visible = false
+layout_mode = 0
+offset_left = 30.0
+offset_top = 100.0
+offset_right = 830.0
+offset_bottom = 530.0
+
+[node name="RabbitRow1" type="HBoxContainer" parent="ShopPanel/RabbitSection" unique_id=220220220]
+
+[node name="BuyWhiteRabbit" type="Button" parent="ShopPanel/RabbitSection/RabbitRow1" unique_id=409740839]
+custom_minimum_size = Vector2(180, 80)
+text = "🤍 白色垂耳兔
+稀有品种
+200 💰"
+
+[node name="BuyBrownRabbit" type="Button" parent="ShopPanel/RabbitSection/RabbitRow1" unique_id=286647756]
+custom_minimum_size = Vector2(180, 80)
+text = "🤎 棕色垂耳兔
+普通品种
+150 💰"
+
+[node name="BuyExpand" type="Button" parent="ShopPanel/RabbitSection/RabbitRow1" unique_id=2125016011]
+custom_minimum_size = Vector2(180, 80)
+text = "🏗️ 扩建围栏
++1 兔子上限
+1000 💰"
+
+[node name="TaskPanel" parent="." instance=ExtResource("3_task_panel") unique_id=555555555]
+
+[node name="UnlockTaskPanel" parent="." instance=ExtResource("4_unlock_task_panel") unique_id=666666666]
+
+[node name="InventoryPanel" type="Panel" parent="." unique_id=987654321]
+visible = false
+offset_left = 50.0
+offset_top = 80.0
+offset_right = 650.0
+offset_bottom = 520.0
+theme = ExtResource("2_theme")
+
+[node name="InventoryTitle" type="Label" parent="InventoryPanel" unique_id=112233445]
+layout_mode = 0
+offset_left = 220.0
+offset_top = 15.0
+offset_right = 380.0
+offset_bottom = 50.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"HeaderLabel"
+text = "🎒 我的背包"
+
+[node name="InventoryCloseButton" type="Button" parent="InventoryPanel" unique_id=223344556]
+layout_mode = 0
+offset_left = 550.0
+offset_top = 10.0
+offset_right = 590.0
+offset_bottom = 45.0
+theme = ExtResource("2_theme")
+text = "✕"
+
+[node name="TabContainer" type="HBoxContainer" parent="InventoryPanel" unique_id=334455667]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 60.0
+offset_right = 570.0
+offset_bottom = 95.0
+
+[node name="TabFood" type="Button" parent="InventoryPanel/TabContainer" unique_id=445566778]
+text = "🥕 食物"
+
+[node name="TabToy" type="Button" parent="InventoryPanel/TabContainer" unique_id=556677889]
+text = "⚽ 玩具"
+
+[node name="TabMedicine" type="Button" parent="InventoryPanel/TabContainer" unique_id=667788990]
+text = "💊 药品"
+
+[node name="ContentArea" type="ScrollContainer" parent="InventoryPanel" unique_id=778899001]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 100.0
+offset_right = 570.0
+offset_bottom = 400.0
+
+[node name="ItemGrid" type="GridContainer" parent="InventoryPanel/ContentArea" unique_id=889900112]
+columns = 3
+
+[node name="EmptyLabel" type="Label" parent="InventoryPanel" unique_id=990011223]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 200.0
+offset_right = 420.0
+offset_bottom = 250.0
+theme = ExtResource("2_theme")
+text = "背包空空如也~
+去商店买点东西吧！"
+horizontal_alignment = 1
+
+[node name="StoragePanel" type="Panel" parent="." unique_id=111222333]
+visible = false
+offset_left = 280.0
+offset_top = 150.0
+offset_right = 680.0
+offset_bottom = 480.0
+theme = ExtResource("2_theme")
+
+[node name="Title" type="Label" parent="StoragePanel" unique_id=222333444]
+layout_mode = 0
+offset_left = 120.0
+offset_top = 15.0
+offset_right = 280.0
+offset_bottom = 45.0
+theme = ExtResource("2_theme")
+theme_type_variation = &"HeaderLabel"
+text = "🍽️ 存放物资"
+
+[node name="CloseButton" type="Button" parent="StoragePanel" unique_id=333444555]
+layout_mode = 0
+offset_left = 360.0
+offset_top = 10.0
+offset_right = 395.0
+offset_bottom = 40.0
+theme = ExtResource("2_theme")
+text = "✕"
+
+[node name="CapacityLabel" type="Label" parent="StoragePanel" unique_id=444555666]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 60.0
+offset_right = 370.0
+offset_bottom = 85.0
+theme = ExtResource("2_theme")
+text = "剩余容量: 0/10"
+
+[node name="ItemList" type="VBoxContainer" parent="StoragePanel" unique_id=555666777]
+layout_mode = 0
+offset_left = 30.0
+offset_top = 95.0
+offset_right = 370.0
+offset_bottom = 330.0
+
+[node name="EmptyLabel" type="Label" parent="StoragePanel" unique_id=666777888]
+visible = false
+layout_mode = 0
+offset_left = 120.0
+offset_top = 200.0
+offset_right = 280.0
+offset_bottom = 230.0
+theme = ExtResource("2_theme")
+text = "没有可用的物资"
+horizontal_alignment = 1
+
+
+[connection signal="pressed" from="StoragePanel/CloseButton" to="." method="_on_storage_close_pressed"]
+
+[connection signal="pressed" from="TopBar/ShopButton" to="." method="_on_shop_button_pressed"]
+[connection signal="pressed" from="TopBar/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="pressed" from="TopBar/TaskButton" to="." method="_on_task_button_pressed"]
+[connection signal="pressed" from="TopBar/GrowthButton" to="." method="_on_growth_button_pressed"]
+[connection signal="pressed" from="TopBar/InventoryButton" to="." method="_on_inventory_button_pressed"]
+[connection signal="pressed" from="InventoryPanel/InventoryCloseButton" to="." method="_on_inventory_close_pressed"]
+[connection signal="pressed" from="InventoryPanel/TabContainer/TabFood" to="." method="_on_inventory_tab_food_pressed"]
+[connection signal="pressed" from="InventoryPanel/TabContainer/TabToy" to="." method="_on_inventory_tab_toy_pressed"]
+[connection signal="pressed" from="InventoryPanel/TabContainer/TabMedicine" to="." method="_on_inventory_tab_medicine_pressed"]
+[connection signal="pressed" from="BottomBar/FeedButton" to="." method="_on_feed_button_pressed"]
+[connection signal="pressed" from="BottomBar/DrinkButton" to="." method="_on_drink_button_pressed"]
+[connection signal="pressed" from="BottomBar/PetButton" to="." method="_on_pet_button_pressed"]
+[connection signal="pressed" from="BottomBar/ShaveButton" to="." method="_on_shave_button_pressed"]
+[connection signal="pressed" from="ShopPanel/CloseButton" to="." method="_on_shop_close_pressed"]
+[connection signal="pressed" from="ShopPanel/RabbitSection/RabbitRow1/BuyWhiteRabbit" to="." method="_on_buy_white_rabbit_pressed"]
+[connection signal="pressed" from="ShopPanel/RabbitSection/RabbitRow1/BuyBrownRabbit" to="." method="_on_buy_brown_rabbit_pressed"]
+[connection signal="pressed" from="ShopPanel/FoodSection/FoodRow1/BuyCarrot" to="." method="_on_buy_carrot_pressed"]
+[connection signal="pressed" from="ShopPanel/FoodSection/FoodRow2/BuyWater" to="." method="_on_buy_water_pressed"]
+[connection signal="pressed" from="ShopPanel/FoodSection/FoodRow1/BuyVegetable" to="." method="_on_buy_vegetable_pressed"]
+[connection signal="pressed" from="ShopPanel/FoodSection/FoodRow1/BuyApple" to="." method="_on_buy_apple_pressed"]
+[connection signal="pressed" from="ShopPanel/FoodSection/FoodRow1/BuyRabbitFood" to="." method="_on_buy_rabbit_food_pressed"]
+[connection signal="pressed" from="ShopPanel/FoodSection/FoodRow2/BuyCake" to="." method="_on_buy_cake_pressed"]
+[connection signal="pressed" from="ShopPanel/ToySection/ToyRow1/BuyGrassCarrot" to="." method="_on_buy_grass_carrot_pressed"]
+[connection signal="pressed" from="ShopPanel/MedicineSection/MedicineRow1/BuyVitamin" to="." method="_on_buy_vitamin_pressed"]
+[connection signal="pressed" from="ShopPanel/MedicineSection/MedicineRow1/BuyHerb" to="." method="_on_buy_herb_pressed"]
+[connection signal="pressed" from="ShopPanel/MedicineSection/MedicineRow1/BuyMagicWater" to="." method="_on_buy_magic_water_pressed"]
+[connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow1/BuyHouse" to="." method="_on_buy_house_pressed"]
+[connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow1/BuyAutoFeeder" to="." method="_on_buy_auto_feeder_pressed"]
+[connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow1/BuyWaterFountain" to="." method="_on_buy_water_fountain_pressed"]
+[connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow1/BuyGrassMat" to="." method="_on_buy_grass_mat_pressed"]
+[connection signal="pressed" from="ShopPanel/FurnitureSection/FurnitureRow2/BuyGoldBowl" to="." method="_on_buy_gold_bowl_pressed"]
+[connection signal="pressed" from="ShopPanel/RabbitSection/RabbitRow1/BuyExpand" to="." method="_on_expand_fence_pressed"]

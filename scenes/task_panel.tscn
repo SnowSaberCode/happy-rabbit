@@ -1,0 +1,68 @@
+[gd_scene load_steps=3 format=3 uid="uid://task_panel_456"]
+
+[ext_resource type="Script" path="res://scripts/task_panel.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://c764d4c4r8jk8" path="res://assets/ui/theme.tres" id="2_theme"]
+
+[node name="TaskPanel" type="Panel"]
+custom_minimum_size = Vector2(600, 500)
+position = Vector2(-600, 80)
+visible = false
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="TitleHBox" type="HBoxContainer" parent="."]
+offset_left = 15.0
+offset_top = 10.0
+offset_right = -15.0
+offset_bottom = -10.0
+custom_minimum_size = Vector2(0, 40)
+
+[node name="TitleLabel" type="Label" parent="TitleHBox"]
+text = "🏆 成就"
+horizontal_alignment = 1
+vertical_alignment = 1
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="TitleHBox"]
+text = "✕"
+custom_minimum_size = Vector2(40, 40)
+
+[node name="TabBar" type="HBoxContainer" parent="."]
+offset_left = 15.0
+offset_top = 55.0
+offset_right = -15.0
+offset_bottom = -55.0
+custom_minimum_size = Vector2(0, 40)
+
+[node name="AchievementTab" type="Button" parent="TabBar"]
+text = "🏆 成就"
+custom_minimum_size = Vector2(140, 35)
+
+[node name="ProgressTab" type="Button" parent="TabBar"]
+text = "📊 进度"
+custom_minimum_size = Vector2(140, 35)
+
+[node name="AchievementSection" type="ScrollContainer" parent="."]
+offset_left = 15.0
+offset_top = 100.0
+offset_right = -15.0
+offset_bottom = -15.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AchievementTaskList" type="VBoxContainer" parent="AchievementSection"]
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(500, 0)
+
+[node name="ProgressSection" type="ScrollContainer" parent="."]
+offset_left = 15.0
+offset_top = 100.0
+offset_right = -15.0
+offset_bottom = -15.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+visible = false
+
+[node name="ProgressTaskList" type="VBoxContainer" parent="ProgressSection"]
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(500, 0)
