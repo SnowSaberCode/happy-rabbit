@@ -2,6 +2,7 @@
 
 2D pixel-style casual breeding game, developed with Godot 4.7.
 2D像素风格休闲养成游戏，用Godot 4.7开发。
+![alt text](image.png)
 
 ## Project Introduction / 项目简介
 
